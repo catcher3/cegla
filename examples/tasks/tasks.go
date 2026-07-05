@@ -6,13 +6,12 @@ import (
 	"net/http"
 	"sync"
 
-	"cegla/core"
-	"cegla/core/atr"
-	"cegla/core/atr/css/tw" // Твой новый пакет для Tailwind
-	"cegla/core/atr/htmx"
-	"cegla/core/tags"
-	"cegla/ui"
-
+	"github.com/catcher3/cegla"
+	"github.com/catcher3/cegla/atr"
+	"github.com/catcher3/cegla/atr/css/tw"
+	"github.com/catcher3/cegla/atr/htmx"
+	"github.com/catcher3/cegla/tags"
+	"github.com/catcher3/cegla/ui"
 	"github.com/gin-gonic/gin"
 )
 
@@ -32,7 +31,7 @@ var (
 // --- 2. Gin Helper for Cegla ---
 
 // RenderHTML bridges Gin and Cegla by writing directly to the HTTP response stream.
-func RenderHTML(c *gin.Context, status int, node core.Node) {
+func RenderHTML(c *gin.Context, status int, node cegla.Node) {
 	c.Status(status)
 	c.Header("Content-Type", "text/html; charset=utf-8")
 
@@ -55,19 +54,19 @@ func RenderHTML(c *gin.Context, status int, node core.Node) {
 
 // Layout is the main HTML wrapper with Tailwind CDN and HTMX included.
 // Layout is the main HTML wrapper with Tailwind CDN and HTMX included.
-func Layout(title string, content core.FlowContent) core.HTML { // <-- Изменили core.Node на core.FlowContent
-	return core.HTML{
+func Layout(title string, content cegla.FlowContent) cegla.HTML { // <-- Изменили cegla.Node на cegla.FlowContent
+	return cegla.HTML{
 		atr.Lang("en"),
-		core.Head{
-			tags.Title{core.Text(title)},
+		cegla.Head{
+			tags.Title{cegla.Text(title)},
 			tags.Script{atr.Src("https://unpkg.com/htmx.org@1.9.10")},
 			tags.Script{atr.Src("https://cdn.tailwindcss.com")}, // Using CDN for demo
 		},
-		core.Body{
+		cegla.Body{
 			tw.Class("bg-gray-100 text-gray-900 min-h-screen p-8"),
 			ui.AvatarGroup{
 				Class: "mt-10",
-				Children: []core.FlowContent{
+				Children: []cegla.FlowContent{
 					ui.Avatar{
 						Source:         "assets/img/user.jpeg",
 						ContainerClass: "w-12 rounded-full",
@@ -108,7 +107,7 @@ func TaskForm() tags.Form {
 		tags.Button{
 			atr.TypeAttr("submit"),
 			tw.Class("bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow-sm transition"),
-			core.Text("Add Task"),
+			cegla.Text("Add Task"),
 		},
 	}
 }
@@ -121,7 +120,7 @@ func TaskItem(t Task) tags.Div {
 
 		tags.Span{
 			tw.Class("text-lg"),
-			core.Text(t.Title),
+			cegla.Text(t.Title),
 		},
 		tags.Button{
 			// HTMX attributes for deletion
@@ -130,7 +129,7 @@ func TaskItem(t Task) tags.Div {
 			htmx.Swap("outerHTML"), // Replace the whole item with nothing (delete it from DOM)
 
 			tw.Class("text-red-500 hover:text-red-700 font-medium"),
-			core.Text("Delete"),
+			cegla.Text("Delete"),
 		},
 	}
 }
@@ -156,7 +155,7 @@ func MainApp(items []Task) tags.Div {
 
 		tags.H1{
 			tw.Class("text-3xl font-extrabold text-center mb-8 text-gray-800"),
-			core.Text("Cegla HTMX Todo"),
+			cegla.Text("Cegla HTMX Todo"),
 		},
 		TaskForm(),
 		TaskList(items),

@@ -2,11 +2,12 @@ package ui
 
 import (
 	"bufio"
-	"cegla/core"
-	"cegla/core/atr"
-	"cegla/core/atr/css/tw"
-	"cegla/core/tags"
 	"context"
+
+	"github.com/catcher3/cegla"
+	"github.com/catcher3/cegla/atr"
+	"github.com/catcher3/cegla/atr/css/tw"
+	"github.com/catcher3/cegla/tags"
 )
 
 // Avatar — это композиция. Она хранит состояние и знает, как собрать себя в tags.Div.
@@ -37,7 +38,7 @@ func (a Avatar) BuildContainer() tags.Div {
 	if a.Placeholder != "" {
 		container = append(container, tags.Span{
 			tw.Class(a.PlaceholderClass),
-			core.Text(a.Placeholder),
+			cegla.Text(a.Placeholder),
 		})
 	}
 
@@ -50,7 +51,7 @@ func (a Avatar) BuildContainer() tags.Div {
 }
 
 func (a Avatar) Render(ctx context.Context, w *bufio.Writer) error {
-	return core.RenderComposition(a, ctx, w)
+	return cegla.RenderComposition(a, ctx, w)
 }
 
 func (Avatar) IsFlow()     {}
@@ -60,7 +61,7 @@ func (Avatar) IsPhrasing() {}
 
 type AvatarGroup struct {
 	Class    string
-	Children []core.FlowContent // В cegla дети передаются как слайс в структуру
+	Children []cegla.FlowContent // В cegla дети передаются как слайс в структуру
 }
 
 func (AvatarGroup) Name() string { return "div" }
@@ -78,7 +79,7 @@ func (g AvatarGroup) BuildContainer() tags.Div {
 }
 
 func (g AvatarGroup) Render(ctx context.Context, w *bufio.Writer) error {
-	return core.RenderComposition(g, ctx, w)
+	return cegla.RenderComposition(g, ctx, w)
 }
 
 func (AvatarGroup) IsFlow() {}

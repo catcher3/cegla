@@ -2,9 +2,10 @@ package ui
 
 import (
 	"bufio"
-	. "cegla/core/atr"
-	. "cegla/core/tags"
 	"context"
+
+	. "github.com/catcher3/cegla"
+	. "github.com/catcher3/cegla/tags"
 )
 
 type Card struct {
@@ -25,7 +26,7 @@ func (Card) Name() string {
 func (cd Card) Render(ctx context.Context, w *bufio.Writer) error {
 	// Собираем содержимое прямо в Render
 	container := Div{
-		Class("card"),
+		P{Text("Привет мир")}, // Пример текста
 		// Передаем поля структуры как детей
 		cd.Title,
 		cd.Description,

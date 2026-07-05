@@ -1,16 +1,17 @@
 package main
 
 import (
-	"cegla/core"
-	"cegla/core/atr"
-	"cegla/core/tags"
 	"fmt"
+
+	"github.com/catcher3/cegla"
+	"github.com/catcher3/cegla/atr"
+	"github.com/catcher3/cegla/tags"
 )
 
 func main() {
 
-	authPage := core.HTML{
-		core.Body{
+	authPage := cegla.HTML{
+		cegla.Body{
 			tags.Form{
 				tags.Input{
 					atr.TypeAttr("text"),

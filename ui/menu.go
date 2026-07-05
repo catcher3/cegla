@@ -2,14 +2,15 @@ package ui
 
 import (
 	"bufio"
-	"cegla/core"
-	"cegla/core/atr"
-	"cegla/core/atr/css/tw"
-	"cegla/core/tags"
 	"context"
+
+	"github.com/catcher3/cegla"
+	"github.com/catcher3/cegla/atr"
+	"github.com/catcher3/cegla/atr/css/tw"
+	"github.com/catcher3/cegla/tags"
 )
 
-// MenuItem — не core.Node, а чистые данные: то, из чего Render строит
+// MenuItem — не cegla.Node, а чистые данные: то, из чего Render строит
 // реальные теги. Специально не Node, чтобы пункты меню было удобно собирать
 // из БД/конфига/JSON, не думая про интерфейсы рендера вообще.
 type MenuItem struct {
@@ -29,13 +30,13 @@ const (
 )
 
 // Menu — композиция (struct), а не типизированный контейнер. Реализует
-// core.Node вручную и внутри Render собирает дерево целиком из tags + atr +
+// cegla.Node вручную и внутри Render собирает дерево целиком из tags + atr +
 // tw, ничего не рендерит "напрямую".
 type Menu struct {
 	Brand       string
 	Items       []MenuItem
-	Orientation Orientation      // Horizontal (по умолчанию) или Vertical
-	Attrs       []core.Attribute // доп. атрибуты на корневой <nav>
+	Orientation Orientation       // Horizontal (по умолчанию) или Vertical
+	Attrs       []cegla.Attribute // доп. атрибуты на корневой <nav>
 }
 
 // Name() возвращает имя фактически рендерящегося корневого тега (<nav>),
@@ -44,19 +45,19 @@ type Menu struct {
 func (Menu) Name() string { return "nav" }
 
 // BuildContainer собирает дерево <nav> целиком, но НЕ рендерит его —
-// возвращает tags.Nav как есть. Реализует core.Composition. Это точка
+// возвращает tags.Nav как есть. Реализует cegla.Composition. Это точка
 // расширения: обёртки над Menu (см. MenuWithActions ниже) вызывают
 // BuildContainer(), дописывают своё в готовое дерево и уже сами вызывают
 // Render — не дублируя сборку брэнда/списка/классов заново.
 func (m Menu) BuildContainer() tags.Nav {
 	nav := make(tags.Nav, 0, len(m.Attrs)+4)
 
-	// core.Attribute не гарантирует core.FlowContent на уровне статических
+	// cegla.Attribute не гарантирует cegla.FlowContent на уровне статических
 	// интерфейсов (в Go совместимость интерфейсов не транзитивна), даже
-	// если каждая реальная реализация её имеет через core.AttrMarker —
-	// поэтому явный мост через any(...).(core.FlowContent).
+	// если каждая реальная реализация её имеет через cegla.AttrMarker —
+	// поэтому явный мост через any(...).(cegla.FlowContent).
 	for _, a := range m.Attrs {
-		if fc, ok := any(a).(core.FlowContent); ok {
+		if fc, ok := any(a).(cegla.FlowContent); ok {
 			nav = append(nav, fc)
 		}
 	}
@@ -82,7 +83,7 @@ func (m Menu) BuildContainer() tags.Nav {
 		nav = append(nav, tags.Span{
 			tw.FontBold(),
 			tw.Text("xl"),
-			core.Text(m.Brand),
+			cegla.Text(m.Brand),
 		})
 	}
 
@@ -94,10 +95,10 @@ func (m Menu) BuildContainer() tags.Nav {
 	return nav
 }
 
-// Render — тонкая обёртка над core.RenderComposition: собрать контейнер,
+// Render — тонкая обёртка над cegla.RenderComposition: собрать контейнер,
 // отрендерить его. Сама Menu никогда не пишет в *bufio.Writer напрямую.
 func (m Menu) Render(ctx context.Context, w *bufio.Writer) error {
-	return core.RenderComposition(m, ctx, w)
+	return cegla.RenderComposition(m, ctx, w)
 }
 
 // IsFlow — делает Menu вкладываемым напрямую в Body{}/Div{} наравне с
@@ -126,7 +127,7 @@ func menuLink(item MenuItem) tags.A {
 		)
 	}
 
-	link = append(link, core.Text(item.Label))
+	link = append(link, cegla.Text(item.Label))
 	return link
 }
 
@@ -138,7 +139,7 @@ func menuLink(item MenuItem) tags.A {
 // поднимет их из встроенного поля. Явно переопределяется только Render.
 type MenuWithActions struct {
 	Menu
-	Actions []core.FlowContent // например кнопка "Войти" или поле поиска
+	Actions []cegla.FlowContent // например кнопка "Войти" или поле поиска
 }
 
 func (m MenuWithActions) BuildContainer() tags.Nav {
@@ -152,5 +153,5 @@ func (m MenuWithActions) BuildContainer() tags.Nav {
 }
 
 func (m MenuWithActions) Render(ctx context.Context, w *bufio.Writer) error {
-	return core.RenderComposition(m, ctx, w)
+	return cegla.RenderComposition(m, ctx, w)
 }
