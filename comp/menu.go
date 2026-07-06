@@ -30,7 +30,7 @@ const (
 )
 
 // Menu — композиция (struct), а не типизированный контейнер. Реализует
-// cegla.Node вручную и внутри Render собирает дерево целиком из tags + atr +
+// cegla.Node вручную и внутри Render собирает дерево целиком из tag + atr +
 // tw, ничего не рендерит "напрямую".
 type Menu struct {
 	Brand       string
@@ -45,12 +45,12 @@ type Menu struct {
 func (Menu) Name() string { return "nav" }
 
 // BuildContainer собирает дерево <nav> целиком, но НЕ рендерит его —
-// возвращает tags.Nav как есть. Реализует cegla.Composition. Это точка
+// возвращает tag.Nav как есть. Реализует cegla.Composition. Это точка
 // расширения: обёртки над Menu (см. MenuWithActions ниже) вызывают
 // BuildContainer(), дописывают своё в готовое дерево и уже сами вызывают
 // Render — не дублируя сборку брэнда/списка/классов заново.
-func (m Menu) BuildContainer() tags.Nav {
-	nav := make(tags.Nav, 0, len(m.Attrs)+4)
+func (m Menu) BuildContainer() tag.Nav {
+	nav := make(tag.Nav, 0, len(m.Attrs)+4)
 
 	// cegla.Attribute не гарантирует cegla.FlowContent на уровне статических
 	// интерфейсов (в Go совместимость интерфейсов не транзитивна), даже
@@ -62,7 +62,7 @@ func (m Menu) BuildContainer() tags.Nav {
 		}
 	}
 
-	list := make(tags.Ul, 0, len(m.Items)+3)
+	list := make(tag.Ul, 0, len(m.Items)+3)
 
 	switch m.Orientation {
 	case Vertical:
@@ -80,15 +80,15 @@ func (m Menu) BuildContainer() tags.Nav {
 	}
 
 	if m.Brand != "" {
-		nav = append(nav, tags.Span{
+		nav = append(nav, tag.Span{
 			tw.FontBold(),
 			tw.Text("xl"),
-			cegla.Text(m.Brand),
+			tag.Text(m.Brand),
 		})
 	}
 
 	for _, item := range m.Items {
-		list = append(list, tags.LI{menuLink(item)})
+		list = append(list, tag.LI{menuLink(item)})
 	}
 	nav = append(nav, list)
 
@@ -111,8 +111,8 @@ func (Menu) IsFlow() {}
 // подсветка (фон + цвет текста) появляется только при hover — это и есть
 // "выделение при наведении на мышку", через tw.Hover(...) (готовый хелпер
 // из tw.go, который добавляет префикс "hover:" перед именем класса).
-func menuLink(item MenuItem) tags.A {
-	link := tags.A{
+func menuLink(item MenuItem) tag.A {
+	link := tag.A{
 		atr.Href(item.Href),
 		tw.Class("px-3 py-2 rounded transition-colors"),
 	}
@@ -127,7 +127,7 @@ func menuLink(item MenuItem) tags.A {
 		)
 	}
 
-	link = append(link, cegla.Text(item.Label))
+	link = append(link, tag.Text(item.Label))
 	return link
 }
 
@@ -142,9 +142,9 @@ type MenuWithActions struct {
 	Actions []cegla.FlowContent // например кнопка "Войти" или поле поиска
 }
 
-func (m MenuWithActions) BuildContainer() tags.Nav {
-	// BuildContainer теперь дженерик по T=tags.Nav (Composition[tags.Nav]),
-	// поэтому Menu.BuildContainer() уже возвращает конкретный tags.Nav —
+func (m MenuWithActions) BuildContainer() tag.Nav {
+	// BuildContainer теперь дженерик по T=tag.Nav (Composition[tag.Nav]),
+	// поэтому Menu.BuildContainer() уже возвращает конкретный tag.Nav —
 	// в отличие от предыдущей негенерик-версии, тут не нужен ни type
 	// assertion, ни проверка ok.
 	nav := m.Menu.BuildContainer()

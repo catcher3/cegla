@@ -1,7 +1,16 @@
 package tag
 
+import (
+	"bufio"
+	"bytes"
+	"context"
+	"html"
+
+	"github.com/catcher3/cegla"
+)
+
 // --- Строгие контейнеры ---
-type HTML []DocumentContent
+type HTML []cegla.DocumentContent
 
 func (h HTML) String() string {
 	ctx := context.Background()
@@ -24,21 +33,21 @@ func (h HTML) Name() string {
 }
 
 func (h HTML) Render(ctx context.Context, w *bufio.Writer) error {
-	return RenderChildren("html", h, ctx, w)
+	return cegla.RenderChildren("html", h, ctx, w)
 }
 
-type Head []MetadataContent // Строго Metadata
+type Head []cegla.MetadataContent // Строго Metadata
 
 func (h Head) Name() string {
 	return "head"
 }
 
 func (h Head) Render(ctx context.Context, w *bufio.Writer) error {
-	return RenderChildren("head", h, ctx, w)
+	return cegla.RenderChildren("head", h, ctx, w)
 }
 func (h Head) IsDocumentContent() {}
 
-type Body []FlowContent // Теперь это слайс, а не тип Body
+type Body []cegla.FlowContent // Теперь это слайс, а не тип Body
 
 func (b Body) Name() string {
 	return "body"
@@ -47,7 +56,7 @@ func (b Body) Name() string {
 func (b Body) IsDocumentContent() {}
 
 func (b Body) Render(ctx context.Context, w *bufio.Writer) error {
-	return RenderChildren("body", b, ctx, w)
+	return cegla.RenderChildren("body", b, ctx, w)
 }
 
 // --- Реализация Text ---

@@ -26,7 +26,7 @@ func (Card) Name() string {
 func (cd Card) Render(ctx context.Context, w *bufio.Writer) error {
 	// Собираем содержимое прямо в Render
 	container := Div{
-		P{Text("Привет мир")}, // Пример текста
+		P{Text("Привет мир!!!")},
 		// Передаем поля структуры как детей
 		cd.Title,
 		cd.Description,
