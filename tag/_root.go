@@ -50,3 +50,19 @@ func (b Body) Render(ctx context.Context, w *bufio.Writer) error {
 	return RenderChildren("body", b, ctx, w)
 }
 
+// --- Реализация Text ---
+type Text string
+
+func (t Text) Name() string {
+	return "#text"
+}
+
+func (t Text) Render(ctx context.Context, w *bufio.Writer) error {
+	w.WriteString(html.EscapeString(string(t)))
+
+	return nil
+}
+
+// Text — это PhrasingContent
+func (t Text) IsPhrasing() {}
+func (t Text) IsFlow()     {}

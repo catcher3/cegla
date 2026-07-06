@@ -1,4 +1,4 @@
-package tags
+package tag
 
 import "github.com/catcher3/cegla"
 
