@@ -114,6 +114,34 @@ type OptionContent interface {
 	IsOptionContent()
 }
 
+// MetadataGroup принимает ТОЛЬКО метаданные и может быть вставлен ТОЛЬКО в Head или аналоги.
+type MetadataGroup []MetadataContent
+
+func (MetadataGroup) IsMetadata()    {}
+func (g MetadataGroup) Name() string { return "group" }
+func (g MetadataGroup) Render(ctx context.Context, w *bufio.Writer) error {
+	for _, child := range g {
+		if err := child.Render(ctx, w); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// FlowGroup принимает ТОЛЬКО FlowContent и может быть вставлен в Body, Div и т.д.
+type FlowGroup []FlowContent
+
+func (FlowGroup) IsFlow()        {}
+func (g FlowGroup) Name() string { return "group" }
+func (g FlowGroup) Render(ctx context.Context, w *bufio.Writer) error {
+	for _, child := range g {
+		if err := child.Render(ctx, w); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 // --- Универсальный маркер для атрибутов ---
 //
 // Attribute — единственный тип, которому разрешено находиться сразу во ВСЕХ
