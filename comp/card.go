@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"context"
 
-	. "github.com/catcher3/cegla"
 	. "github.com/catcher3/cegla/tag"
 )
 

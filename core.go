@@ -3,7 +3,6 @@ package cegla
 import (
 	"bufio"
 	"context"
-	"html"
 )
 
 // --- Фундамент ---
@@ -28,7 +27,6 @@ type DocumentContent interface {
 	// Нет смысла делать через экспортируемый метод, так как это маркер для двух элементов Head и Body.
 	IsDocumentContent()
 }
-
 
 // --- Маркеры (Интерфейсы) ---
 // --- Базовые категории контента (пересекающиеся, элемент может иметь несколько) ---
@@ -115,7 +113,6 @@ type OptionContent interface {
 	Node
 	IsOptionContent()
 }
-
 
 // --- Универсальный маркер для атрибутов ---
 //
