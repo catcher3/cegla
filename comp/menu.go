@@ -7,7 +7,7 @@ import (
 	"github.com/catcher3/cegla"
 	"github.com/catcher3/cegla/atr"
 	"github.com/catcher3/cegla/atr/css/tw"
-	"github.com/catcher3/cegla/tags"
+	"github.com/catcher3/cegla/tag"
 )
 
 // MenuItem — не cegla.Node, а чистые данные: то, из чего Render строит

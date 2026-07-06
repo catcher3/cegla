@@ -5,7 +5,7 @@ import (
 	"context"
 
 	. "github.com/catcher3/cegla"
-	. "github.com/catcher3/cegla/tags"
+	. "github.com/catcher3/cegla/tag"
 )
 
 type Card struct {

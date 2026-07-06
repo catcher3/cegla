@@ -7,7 +7,7 @@ import (
 	"github.com/catcher3/cegla"
 	"github.com/catcher3/cegla/atr"
 	"github.com/catcher3/cegla/atr/css/tw"
-	"github.com/catcher3/cegla/tags"
+	"github.com/catcher3/cegla/tag"
 )
 
 // Avatar — это композиция. Она хранит состояние и знает, как собрать себя в tags.Div.
