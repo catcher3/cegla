@@ -5,19 +5,19 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/catcher3/cegla"
+	. "github.com/catcher3/cegla"
+	"github.com/catcher3/cegla/render"
 )
 
 // --- Простые flow-контейнеры ---
-
-type Div []cegla.FlowContent
-type Blockquote []cegla.FlowContent
-type Main []cegla.FlowContent
-type Dialog []cegla.FlowContent
-type Header []cegla.FlowContent
-type Footer []cegla.FlowContent
-type Address []cegla.FlowContent
-type Form []cegla.FlowContent // нельзя вложенный <form> — не выражается категорией, только runtime/линтом
+type Div Flow
+type Blockquote Flow
+type Main Flow
+type Dialog Flow
+type Header Flow
+type Footer Flow
+type Address Flow
+type Form Flow // нельзя вложенный <form> — не выражается категорией, только runtime/линтом
 
 func (Div) Name() string        { return "div" }
 func (Blockquote) Name() string { return "blockquote" }
@@ -29,28 +29,28 @@ func (Address) Name() string    { return "address" }
 func (Form) Name() string       { return "form" }
 
 func (el Div) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Blockquote) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Main) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Dialog) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Header) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Footer) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Address) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Form) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 
 func (Div) IsFlow()        {}
@@ -64,17 +64,17 @@ func (Form) IsFlow()       {}
 
 // --- P / Pre — только Phrasing ---
 
-type P []cegla.PhrasingContent
-type Pre []cegla.PhrasingContent
+type P Phrasing
+type Pre Phrasing
 
 func (P) Name() string   { return "p" }
 func (Pre) Name() string { return "pre" }
 
 func (el P) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Pre) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 
 func (P) IsFlow()   {}
@@ -82,32 +82,32 @@ func (Pre) IsFlow() {}
 
 // --- Hr — void-элемент, только атрибуты ---
 
-type Hr []cegla.Attribute
+type Hr Attrs
 
 func (Hr) Name() string { return "hr" }
 func (el Hr) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderVoid(el.Name(), el, ctx, w)
+	return render.RenderVoid(el.Name(), el, ctx, w)
 }
 func (Hr) IsFlow() {}
 
 // --- Списки: Ol/Ul -> только LI ---
 
-type Ol []cegla.ListChild
-type Ul []cegla.ListChild
-type LI []cegla.FlowContent // содержимое <li> — обычный Flow
+type Ol List
+type Ul List
+type LI Flow // содержимое <li> — обычный Flow
 
 func (Ol) Name() string { return "ol" }
 func (Ul) Name() string { return "ul" }
 func (LI) Name() string { return "li" }
 
 func (el Ol) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Ul) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el LI) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 
 func (Ol) IsFlow()      {}
@@ -117,22 +117,22 @@ func (LI) IsFlow()      {} // сам LI валиден и как FlowContent (н
 
 // --- Dl -> только Dt/Dd ---
 
-type Dl []cegla.DescriptionListContent
-type Dt []cegla.PhrasingContent
-type Dd []cegla.FlowContent
+type Dl DescriptionList
+type Dt Phrasing
+type Dd Flow
 
 func (Dl) Name() string { return "dl" }
 func (Dt) Name() string { return "dt" }
 func (Dd) Name() string { return "dd" }
 
 func (el Dl) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Dt) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Dd) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 
 func (Dl) IsFlow()                   {}
@@ -141,14 +141,14 @@ func (Dd) IsDescriptionListContent() {}
 
 // --- Figure -> максимум один FigCaption (проверяется в Render) ---
 
-type Figure []cegla.FlowContent
-type FigCaption []cegla.FlowContent
+type Figure Flow
+type FigCaption Flow
 
 func (Figure) Name() string     { return "figure" }
 func (FigCaption) Name() string { return "figcaption" }
 
 func (el FigCaption) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 
 func (el Figure) Render(ctx context.Context, w *bufio.Writer) error {
@@ -161,7 +161,7 @@ func (el Figure) Render(ctx context.Context, w *bufio.Writer) error {
 	if captions > 1 {
 		return fmt.Errorf("cegla: <figure> allows at most one <figcaption>, got %d", captions)
 	}
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 
 func (Figure) IsFlow()     {}
@@ -169,14 +169,14 @@ func (FigCaption) IsFlow() {}
 
 // --- Details -> Summary (если есть) должен идти первым (проверяется в Render) ---
 
-type Details []cegla.FlowContent
-type Summary []cegla.PhrasingContent
+type Details Flow
+type Summary Phrasing
 
 func (Details) Name() string { return "details" }
 func (Summary) Name() string { return "summary" }
 
 func (el Summary) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 
 func (el Details) Render(ctx context.Context, w *bufio.Writer) error {
@@ -185,7 +185,7 @@ func (el Details) Render(ctx context.Context, w *bufio.Writer) error {
 			return fmt.Errorf("cegla: <summary> must be the first child of <details>")
 		}
 	}
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 
 func (Details) IsFlow()        {}

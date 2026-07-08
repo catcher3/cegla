@@ -5,9 +5,9 @@ import (
 	"context"
 
 	"github.com/catcher3/cegla"
-	"github.com/catcher3/cegla/atr"
-	"github.com/catcher3/cegla/atr/css/tw"
+	"github.com/catcher3/cegla/render"
 	"github.com/catcher3/cegla/tag"
+	"github.com/catcher3/cegla/tw"
 )
 
 // MenuItem — не cegla.Node, а чистые данные: то, из чего Render строит
@@ -35,8 +35,8 @@ const (
 type Menu struct {
 	Brand       string
 	Items       []MenuItem
-	Orientation Orientation       // Horizontal (по умолчанию) или Vertical
-	Attrs       []cegla.Attribute // доп. атрибуты на корневой <nav>
+	Orientation Orientation // Horizontal (по умолчанию) или Vertical
+	Attrs       cegla.Attrs // доп. атрибуты на корневой <nav>
 }
 
 // Name() возвращает имя фактически рендерящегося корневого тега (<nav>),
@@ -52,12 +52,12 @@ func (Menu) Name() string { return "nav" }
 func (m Menu) BuildContainer() tag.Nav {
 	nav := make(tag.Nav, 0, len(m.Attrs)+4)
 
-	// cegla.Attribute не гарантирует cegla.FlowContent на уровне статических
+	// Attrsibute не гарантирует cegla.FlowContent на уровне статических
 	// интерфейсов (в Go совместимость интерфейсов не транзитивна), даже
-	// если каждая реальная реализация её имеет через cegla.AttrMarker —
+	// если каждая реальная реализация её имеет через AttrsMarker —
 	// поэтому явный мост через any(...).(cegla.FlowContent).
 	for _, a := range m.Attrs {
-		if fc, ok := any(a).(cegla.FlowContent); ok {
+		if fc, ok := any(a).(tag.FlowContent); ok {
 			nav = append(nav, fc)
 		}
 	}
@@ -98,7 +98,7 @@ func (m Menu) BuildContainer() tag.Nav {
 // Render — тонкая обёртка над cegla.RenderComposition: собрать контейнер,
 // отрендерить его. Сама Menu никогда не пишет в *bufio.Writer напрямую.
 func (m Menu) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderComposition(m, ctx, w)
+	return render.RenderComposition(m, ctx, w)
 }
 
 // IsFlow — делает Menu вкладываемым напрямую в Body{}/Div{} наравне с
@@ -113,7 +113,7 @@ func (Menu) IsFlow() {}
 // из tw.go, который добавляет префикс "hover:" перед именем класса).
 func menuLink(item MenuItem) tag.A {
 	link := tag.A{
-		atr.Href(item.Href),
+		tag.Href(item.Href),
 		tw.Class("px-3 py-2 rounded transition-colors"),
 	}
 
@@ -139,7 +139,7 @@ func menuLink(item MenuItem) tag.A {
 // поднимет их из встроенного поля. Явно переопределяется только Render.
 type MenuWithActions struct {
 	Menu
-	Actions []cegla.FlowContent // например кнопка "Войти" или поле поиска
+	Actions tag.Flow // например кнопка "Войти" или поле поиска
 }
 
 func (m MenuWithActions) BuildContainer() tag.Nav {
@@ -153,5 +153,5 @@ func (m MenuWithActions) BuildContainer() tag.Nav {
 }
 
 func (m MenuWithActions) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderComposition(m, ctx, w)
+	return render.RenderComposition(m, ctx, w)
 }

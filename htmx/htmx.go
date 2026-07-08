@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"context"
 
-	"github.com/catcher3/cegla"
+	"github.com/catcher3/cegla/tag"
 )
 
 var (
@@ -22,11 +22,11 @@ var (
 	keyWs  = []byte("hx-ws")
 )
 
-// Attr встраивает cegla.AttrMarker — как и atr.Attr, доступен в любой
+// Attr встраивает AttrsMarker — как и tag.Attr, доступен в любой
 // категории контента (Flow, Phrasing, TableRowContent, ListChild и т.д.),
 // поэтому htmx.Post(...) можно положить и в Button{}, и в TR{}, и куда угодно.
 type Attr struct {
-	cegla.AttrMarker
+	tag.AttrMarker
 	key []byte
 	val []byte
 }

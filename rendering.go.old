@@ -5,7 +5,21 @@ import (
 	"bufio"
 	"context"
 	"html"
+
+	"github.com/catcher3/cegla/atr"
 )
+
+// Вспомогательная функция для тегов-слайсов, чтобы не дублировать логику
+func getLastID[T root.Node](content []T) string {
+	id := ""
+	for _, item := range content {
+		// Проверяем, является ли элемент атрибутом "id"
+		if attr, ok := any(item).(atr.Attribute); ok && attr.Key() == "id" {
+			id = attr.Value()
+		}
+	}
+	return id
+}
 
 type attrEntry struct {
 	key   string
@@ -36,17 +50,17 @@ func mergeAttr(entries []attrEntry, key, value string) []attrEntry {
 // RenderChildren — единая реализация рендера для любого контейнерного тега:
 // FlowContent, PhrasingContent, MetadataContent, TableChild, TableRowContent,
 // ListChild, SelectContent, DescriptionListContent, OptionContent и т.д.
-// Атрибуты (cegla.Attribute) и обычные дети распознаются по типу прямо внутри
+// Атрибуты (Attrsibute) и обычные дети распознаются по типу прямо внутри
 // одного слайса, поэтому Div{Class("a"), P{...}} работает без отдельного
 // поля Attrs. Функция generic, чтобы не плодить RenderFlow/RenderPhrasing/...
 // по одной на каждую категорию контента.
-func RenderChildren[T Node](tagName string, content []T, ctx context.Context, w *bufio.Writer) error {
+func RenderChildren[T root.Node](tagName string, content []T, ctx context.Context, w *bufio.Writer) error {
 	w.WriteByte('<')
 	w.WriteString(tagName)
 
 	var entries []attrEntry // nil, если атрибутов нет — лишней аллокации не будет
 	for _, item := range content {
-		if attr, ok := any(item).(Attribute); ok {
+		if attr, ok := any(item).(atr.Attribute); ok {
 			entries = mergeAttr(entries, attr.Key(), attr.Value())
 		}
 	}
@@ -60,7 +74,7 @@ func RenderChildren[T Node](tagName string, content []T, ctx context.Context, w 
 	w.WriteByte('>')
 
 	for _, item := range content {
-		if _, ok := any(item).(Attribute); ok {
+		if _, ok := any(item).(atr.Attribute); ok {
 			continue
 		}
 		if err := item.Render(ctx, w); err != nil {
@@ -78,10 +92,10 @@ func RenderChildren[T Node](tagName string, content []T, ctx context.Context, w 
 // RenderVoid — рендер void-элементов (br, hr, img, input, meta, link, base,
 // col, source, track, embed, wbr). У них нет и не может быть детей — только
 // атрибуты, поэтому вызывающий тип должен быть слайсом Attribute
-// (например type Img []cegla.Attribute), а не FlowContent/PhrasingContent.
+// (например type Img []Attrsibute), а не FlowContent/PhrasingContent.
 // Это гарантирует на этапе компиляции, что внутрь void-тега нельзя случайно
 // положить дочерний элемент.
-func RenderVoid(tagName string, attrs []Attribute, ctx context.Context, w *bufio.Writer) error {
+func RenderVoid(tagName string, attrs Attr, ctx context.Context, w *bufio.Writer) error {
 	w.WriteByte('<')
 	w.WriteString(tagName)
 

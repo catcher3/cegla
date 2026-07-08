@@ -11,8 +11,8 @@ type CSS interface {
 }
 
 // Style — набор CSS/tailwind-классов, который ведёт себя как атрибут
-// class="...". Реализует cegla.Attribute напрямую (Style — слайс, поэтому не
-// может встроить cegla.AttrMarker как структурное поле — методы продублированы
+// class="...". Реализует Attrsibute напрямую (Style — слайс, поэтому не
+// может встроить AttrsMarker как структурное поле — методы продублированы
 // вручную), поэтому Style{...} можно класть прямо в литерал любого тега
 // рядом с обычными детьми:
 //
@@ -21,8 +21,8 @@ type CSS interface {
 //	    Text("Click me"),
 //	}
 //
-// cegla.RenderChildren распознаёт Style как cegla.Attribute с Key()=="class"
-// и смёрджит его с любыми другими "class"-атрибутами (например atr.Class)
+// cegla.RenderChildren распознаёт Style как Attrsibute с Key()=="class"
+// и смёрджит его с любыми другими "class"-атрибутами (например tag.Class)
 // через конкатенацию, а не затирает их.
 type Style []CSS
 
@@ -38,7 +38,7 @@ func (s Style) ToClass() string {
 	return strings.Join(res, " ")
 }
 
-// --- cegla.Attribute ---
+// --- Attrsibute ---
 
 func (Style) Name() string    { return "class" }
 func (Style) Key() string     { return "class" }

@@ -4,7 +4,8 @@ import (
 	"bufio"
 	"context"
 
-	"github.com/catcher3/cegla"
+	. "github.com/catcher3/cegla"
+	"github.com/catcher3/cegla/render"
 )
 
 // Примечание: A, Details, Embed, Iframe уже определены как полноценные
@@ -13,11 +14,11 @@ import (
 // Img с usemap интерактивен условно (зависит от наличия атрибута), это не
 // выражается системой типов и потому не выделено в отдельный тип.
 
-type Button []cegla.PhrasingContent
-type Label []cegla.PhrasingContent
-type Select []cegla.SelectContent
-type Textarea []cegla.PhrasingContent // содержимое — text/значение по умолчанию
-type Input []cegla.Attribute          // void-элемент, полностью управляется атрибутами
+type Button Phrasing
+type Label Phrasing
+type Select SelectChildren
+type Textarea Phrasing // содержимое — text/значение по умолчанию
+type Input Attrs       // void-элемент, полностью управляется атрибутами
 
 func (Button) Name() string   { return "button" }
 func (Label) Name() string    { return "label" }
@@ -26,19 +27,19 @@ func (Textarea) Name() string { return "textarea" }
 func (Input) Name() string    { return "input" }
 
 func (bn Button) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(bn.Name(), bn, ctx, w)
+	return render.RenderChildren(bn.Name(), bn, ctx, w)
 }
 func (el Label) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Select) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Textarea) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Input) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderVoid(el.Name(), el, ctx, w)
+	return render.RenderVoid(el.Name(), el, ctx, w)
 }
 
 func (Button) IsFlow()           {}

@@ -1,23 +1,21 @@
-// atr.go
+// tag.go
 // Аттрибуты — это отдельные сущности, которые могут быть применены к элементам HTML. Они представляют собой пары ключ-значение, которые определяют свойства и поведение элементов.
 package atr
 
 import (
 	"bufio"
 	"context"
-
-	"github.com/catcher3/cegla"
 )
 
 // Attr — простой тип для одного атрибута.
 //
-// Встраивает cegla.AttrMarker, поэтому автоматически реализует все
+// Встраивает AttrsMarker, поэтому автоматически реализует все
 // маркерные интерфейсы контента (FlowContent, PhrasingContent,
 // MetadataContent, DocumentContent, TableChild, TableRowContent,
 // SelectContent, ListChild, OptionContent и т.д.) — атрибут можно положить
 // в литерал любого тега, независимо от его категории.
 type Attr struct {
-	cegla.AttrMarker
+	AttrMarker
 	K, V string
 }
 
@@ -87,7 +85,7 @@ func AriaHidden(v string) Attr  { return Attr{K: "aria-hidden", V: v} }
 //
 //	Input{
 //		atr.TypeAttr("text"),
-//		condIf(user.Locked, atr.Disabled()), // включать в слайс только когда true
+//		condIf(user.Locked, tag.Disabled()), // включать в слайс только когда true
 //	}
 //
 // Собрать такой слайс с условием проще всего обычным append в коде

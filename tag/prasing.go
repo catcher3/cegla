@@ -4,37 +4,38 @@ import (
 	"bufio"
 	"context"
 
-	"github.com/catcher3/cegla"
+	. "github.com/catcher3/cegla"
+	"github.com/catcher3/cegla/render"
 )
 
-type Span []cegla.PhrasingContent
-type Em []cegla.PhrasingContent
-type Strong []cegla.PhrasingContent
-type Small []cegla.PhrasingContent
-type S []cegla.PhrasingContent
-type Cite []cegla.PhrasingContent
-type Q []cegla.PhrasingContent
-type Dfn []cegla.PhrasingContent
-type Abbr []cegla.PhrasingContent
-type Time []cegla.PhrasingContent
-type Code []cegla.PhrasingContent
-type Var []cegla.PhrasingContent
-type Samp []cegla.PhrasingContent
-type Kbd []cegla.PhrasingContent
-type Sub []cegla.PhrasingContent
-type Sup []cegla.PhrasingContent
-type I []cegla.PhrasingContent
-type B []cegla.PhrasingContent
-type U []cegla.PhrasingContent
-type Mark []cegla.PhrasingContent
-type Bdi []cegla.PhrasingContent
-type Bdo []cegla.PhrasingContent
-type Wbr []cegla.Attribute // void
+type Span Phrasing
+type Em Phrasing
+type Strong Phrasing
+type Small Phrasing
+type S Phrasing
+type Cite Phrasing
+type Q Phrasing
+type Dfn Phrasing
+type Abbr Phrasing
+type Time Phrasing
+type Code Phrasing
+type Var Phrasing
+type Samp Phrasing
+type Kbd Phrasing
+type Sub Phrasing
+type Sup Phrasing
+type I Phrasing
+type B Phrasing
+type U Phrasing
+type Mark Phrasing
+type Bdi Phrasing
+type Bdo Phrasing
+type Wbr Attrs // void
 
 // A — транзитивный (transparent) элемент: реальные допустимые дети зависят
 // от контекста использования (см. ограничение системы типов, embedded.go).
 // Берём самое широкое разрешение — PhrasingContent.
-type A []cegla.PhrasingContent
+type A Phrasing
 
 func (Span) Name() string   { return "span" }
 func (Em) Name() string     { return "em" }
@@ -62,76 +63,76 @@ func (Wbr) Name() string    { return "wbr" }
 func (A) Name() string      { return "a" }
 
 func (el Span) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Em) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Strong) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Small) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el S) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Cite) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Q) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Dfn) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Abbr) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Time) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Code) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Var) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Samp) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Kbd) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Sub) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Sup) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el I) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el B) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el U) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Mark) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Bdi) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Bdo) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (el Wbr) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderVoid(el.Name(), el, ctx, w)
+	return render.RenderVoid(el.Name(), el, ctx, w)
 }
 func (el A) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 
 func (Span) IsFlow()       {}
@@ -187,22 +188,22 @@ func (A) IsInteractive() {}
 
 // --- Br — void ---
 
-type Br []cegla.Attribute
+type Br Attrs
 
 func (Br) Name() string { return "br" }
 func (el Br) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderVoid(el.Name(), el, ctx, w)
+	return render.RenderVoid(el.Name(), el, ctx, w)
 }
 func (Br) IsFlow()     {}
 func (Br) IsPhrasing() {}
 
 // --- Data ---
 
-type Data []cegla.PhrasingContent // атрибут value + текстовое содержимое
+type Data Phrasing // атрибут value + текстовое содержимое
 
 func (Data) Name() string { return "data" }
 func (el Data) Render(ctx context.Context, w *bufio.Writer) error {
-	return cegla.RenderChildren(el.Name(), el, ctx, w)
+	return render.RenderChildren(el.Name(), el, ctx, w)
 }
 func (Data) IsFlow()     {}
 func (Data) IsPhrasing() {}
