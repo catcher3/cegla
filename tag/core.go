@@ -118,7 +118,7 @@ type OptionContent interface {
 type Metadata []MetadataContent
 
 // Name возвращает "#metadata" или "#fragment", так как реального тега нет.
-func (Metadata) Name() string { return "#metadata" }
+func (Metadata) Name() string { return "#fragment" }
 func (Metadata) IsMetadata()  {}
 
 // Render просто рендерит всех детей последовательно, без оборачивания в теги.
@@ -132,6 +132,18 @@ func (m Metadata) Render(ctx context.Context, w *bufio.Writer) error {
 }
 
 type Flow []FlowContent
+
+func (Flow) Name() string { return "#fragment" }
+func (Flow) IsFlow()      {}
+func (tg Flow) Render(ctx context.Context, w *bufio.Writer) error {
+	for _, child := range tg {
+		if err := child.Render(ctx, w); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 type Phrasing []PhrasingContent
 type List []ListChild
 type DescriptionList []DescriptionListContent
